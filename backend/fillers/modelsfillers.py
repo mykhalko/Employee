@@ -13,8 +13,9 @@ class EmployeeRandomizer():
         self._position_filler = positionfillers.PositionRandomizer()
 
     @property
-    def random_employee(self, start=1000000000, end=1500000000):
-        queryset = Employee.objects.all()
+    def random_employee(self, start=1000000000, end=1500000000, queryset=None):
+        if queryset is None:
+            queryset = Employee.objects.all()
         fullname = self._name_filler.random_name
         position = self._position_filler.random_position
         salary = random() * 7000
@@ -28,7 +29,10 @@ class EmployeeRandomizer():
             'superior': superior
         }
 
-    def fill_model_with(self, amount=10):
+    def fill_model_with(self, amount=10, leafs_only=False):
+        queryset = None
+        if leafs_only:
+            queryset = [i for i in Employee.objects.all()]
         for i in range(amount):
-            employee = Employee(**self.random_employee)
+            employee = Employee(**self.random_employee, queryset=queryset)
             employee.save()
