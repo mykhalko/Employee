@@ -22,7 +22,7 @@ class Employee(models.Model):
             for subordinate in self.subordinates.all():
                 subordinate.superior = subdue_to
                 subordinate.save()
-        self.delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def delete_branch(self):
         for subordinate in self.subordinates.all():
