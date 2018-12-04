@@ -1,4 +1,24 @@
+import os
+import uuid
+
 from django.db import models
+from django.db.models.signals import pre_delete
+
+from employee.settings import MEDIA_ROOT, MEDIA_URL
+
+
+def get_image_path(instance, title):
+    ext = title.split('.')[-1]
+    new_name = str(uuid.uuid1())
+    return 'employee/images/' + new_name + '.' + ext
+
+
+def remove_image(sender, instance, **kwargs):
+    if instance.image:
+        relative_path = instance.image.url.replace(MEDIA_URL, '', 1)
+        absolute_path = os.path.join(MEDIA_ROOT, relative_path)
+        if os.path.exists(absolute_path):
+            os.remove(absolute_path)
 
 
 class Employee(models.Model):
@@ -9,6 +29,7 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=12, decimal_places=2, null=False, blank=False)
     superior = models.ForeignKey('employee.Employee', related_name='subordinates',
                                  null=True, blank=True, on_delete=models.SET_NULL)
+    image = models.ImageField(max_length=255, null=True, blank=True, upload_to=get_image_path)
 
     def __str__(self):
         return str(self.pk) + '. ' + str(self.fullname) + ' ' + str(self.position)
@@ -37,3 +58,5 @@ class Employee(models.Model):
             superior = superior.superior
         return False
 
+
+pre_delete.connect(remove_image, Employee)

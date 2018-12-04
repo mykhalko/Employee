@@ -19,7 +19,7 @@ DEBUG = conf.DEBUG
 ALLOWED_HOSTS = conf.ALLOWED_HOSTS
 SECRET_KEY = conf.SECRET_KEY
 DATABASES = conf.DATABASES
-
+MEDIA_ROOT = conf.MEDIA_ROOT
 
 INSTALLED_APPS = [
     # Django
@@ -62,6 +62,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50
 }
 
 
@@ -76,7 +78,7 @@ ROOT_URLCONF = 'employee.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,3 +122,5 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
