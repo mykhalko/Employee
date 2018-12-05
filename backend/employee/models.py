@@ -29,6 +29,7 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=12, decimal_places=2, null=False, blank=False)
     superior = models.ForeignKey('employee.Employee', related_name='subordinates',
                                  null=True, blank=True, on_delete=models.SET_NULL)
+    is_general_chief = models.BooleanField(null=False, blank=False, default=False)
     image = models.ImageField(max_length=255, null=True, blank=True, upload_to=get_image_path)
 
     def __str__(self):
