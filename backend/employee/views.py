@@ -1,18 +1,21 @@
 from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework import status
 
 from . import models
 from . import serializers
+from . import permissions
 
 
 class EmployeeViewSet(ModelViewSet):
 
+    model = models.Employee
     parser_classes = MultiPartParser, JSONParser
     serializer_class = serializers.EmployeeSerializer
-    model = models.Employee
+    permission_classes = (permissions.IsStaffOrReadOnly, )
     queryset = models.Employee.objects.all()
 
     def get_queryset(self):
@@ -31,6 +34,12 @@ class EmployeeViewSet(ModelViewSet):
         query_params = self.request.query_params
         search_field = query_params.get('search_field')
         value = query_params.get('value')
+        chief_only = query_params.get('chief_only')
+        # filter to return chief only, if chief parameter provided
+        # return data only with tree root nodes
+        if chief_only is not None:
+            queryset = queryset.filter(is_general_chief=True)
+        # filter for searching
         # if parameters provided
         if search_field in ('fullname', 'position', 'employment_date', 'salary') and value:
             search_field = search_field.lower()
@@ -51,6 +60,7 @@ class EmployeeViewSet(ModelViewSet):
         return queryset
 
     def list(self, request, *args, **kwargs):
+        query_params = request.query_params
         return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):

@@ -1,0 +1,8 @@
+{{ employee.fullname }}
+{% if employee.subordinates.all %}
+    <ul style="border-left: 1px solid black; border-bottom: 1px solid black; list-style: none; padding-left: 10px; margin: 5px;">
+        {% for subordinate in employee.subordinates.all %}
+            <li style="margin-left: 0px; text-align: left;">{% include 'snippet.html' with employee=subordinate %}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
