@@ -5,7 +5,8 @@ import os
 from django import test
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.test import APIRequestFactory, APIClient
+from rest_framework_jwt.views import obtain_jwt_token
 
 from . import models
 from .settings import BASE_DIR
@@ -75,12 +76,22 @@ class EmployeeModelTest(test.TestCase):
 
 class EmployeeViewSetTest(test.TestCase):
 
-    fixtures = [os.path.join(BASE_DIR, 'fixtures/Employee.json')]
+    fixtures = [os.path.join(BASE_DIR, 'fixtures/Employee.json'),
+                os.path.join(BASE_DIR, 'fixtures/Auth.json')]
 
     def setUp(self):
-        self.factory = APIRequestFactory()
+        factory = APIRequestFactory()
         superuser = User.objects.filter(is_superuser=True)
+        auth_credentials = {
+            'username': 'admin',
+            'password': 'adminpassword'
+        }
+        response = obtain_jwt_token(factory.post('/api/token-auth', data=auth_credentials))
+        token = response.data['token']
+        self.factory = factory
         self.superuser = superuser
+        self.auth_credentials = auth_credentials
+        self.token = token
 
     def test_fullname_search(self):
         name_part = 'novak'
@@ -117,3 +128,94 @@ class EmployeeViewSetTest(test.TestCase):
         for item in results:
             salary = item['salary']
             self.assertEquals(search_salary, salary)
+
+    def test_unauthenticated_safe_methods(self):
+        request = self.factory.get('/api/employee')
+        response = EmployeeViewSet.as_view({'get': 'list'})(request)
+        self.assertEquals(response.status_code, 200)
+
+        request = self.factory.get(f'/api/employee/1')
+        response = EmployeeViewSet.as_view({'get': 'retrieve'})(request, pk=1)
+        self.assertEquals(response.status_code, 200)
+
+    def test_unauthenticated_unsafe_methods(self):
+        data = {
+            'fullname': 'abc',
+            'position': 'xyz',
+            'salary': "9999999.99",
+            'employment_date': '2000-12-12',
+        }
+        request = self.factory.put('/api/employee/1', data=data)
+        response = EmployeeViewSet.as_view({'put': 'update'})(request, pk=1)
+        self.assertEquals(response.status_code, 401)
+
+        data = {
+            'salary': "9.99"
+        }
+        request = self.factory.patch(f'/api/employee/1')
+        response = EmployeeViewSet.as_view({'patch': 'partial_update'})(request, pk=1)
+        self.assertEquals(response.status_code, 401)
+
+        request = self.factory.delete('/api/employee/1')
+        response = EmployeeViewSet.as_view({'delete': 'destroy'})(request, pk=1)
+        self.assertEquals(response.status_code, 401)
+
+        data = {
+            'fullname': 'abc',
+            'position': 'xyz',
+            'salary': "9999999.99",
+            'employment_date': '2000-12-12',
+        }
+        request = self.factory.post('/api/employee')
+        response = EmployeeViewSet.as_view({'post': 'create'})(request)
+        self.assertEquals(response.status_code, 401)
+
+    def test_authenticated_as_staff_safe_methods(self):
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+        response = client.get('/api/employee')
+        self.assertEquals(response.status_code, 200)
+
+        response = client.get('/api/employee/1')
+        self.assertEquals(response.status_code, 200)
+
+    def test_authenticated_as_staff_unsafe_methods(self):
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+
+        data = {
+            'fullname': 'abc',
+            'position': 'xyz',
+            'salary': "9999999.99",
+            'employment_date': '2000-12-12',
+        }
+        response = client.post('/api/employee', data=data)
+        self.assertEquals(response.status_code, 201)
+        record_id = response.data['id']
+        for key in data:
+            self.assertEquals(data[key], response.data[key])
+
+        data = {
+            'fullname': 'ABC',
+            'position': 'MJK',
+            'salary': "99.99",
+            'employment_date': '2010-12-12',
+        }
+        response = client.put(f'/api/employee/{record_id}', data=data)
+        self.assertEquals(response.status_code, 200)
+        for key in data:
+            self.assertEquals(data[key], response.data[key])
+
+        data = {
+            'salary': "1.99"
+        }
+        response = client.patch(f'/api/employee/{record_id}', data=data)
+        self.assertEquals(response.status_code, 200)
+        for key in data:
+            self.assertEquals(data[key], response.data[key])
+
+        response = client.delete(f'/api/employee/{record_id}')
+        self.assertEquals(response.status_code, 204)
+
+        response = client.get(f'/api/employee/{record_id}')
+        self.assertEquals(response.status_code, 404)
