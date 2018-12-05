@@ -59,5 +59,18 @@ class Employee(models.Model):
             superior = superior.superior
         return False
 
+    # Very resource intensive method, should be optimized
+    def get_all_subordinates_ids(self,):
+        ids = []
+        for subordinate in self.subordinates.all():
+            ids.append(subordinate.id)
+            ids.extend(subordinate.get_all_subordinates_ids())
+        return ids
+
+    @property
+    def all_subordinates(self):
+        ids = self.get_all_subordinates_ids()
+        return Employee.objects.filter(id__in=ids)
+
 
 pre_delete.connect(remove_image, Employee)
