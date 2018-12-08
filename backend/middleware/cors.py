@@ -7,4 +7,5 @@ class AllowCORSMiddleware:
     def __call__(self, request, *args, **kwargs):
         response = self.get_response(request, *args, **kwargs)
         response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Headers'] = '*'
         return response

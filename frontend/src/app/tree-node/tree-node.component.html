@@ -1,0 +1,13 @@
+<span class="superior" *ngIf="superior">
+  {{superior.fullname}}, {{superior.position}},
+  ${{superior.salary}}, from {{superior.employment_date}}
+  <button mat-button (click)="onClick()" >{{ expanded ? 'collapse' : 'expand' }}</button>
+</span>
+<ng-container *ngIf="expanded">
+  <ul *ngIf="hasSubordinates" class="subordinates-list">
+    <li *ngFor="let subordinate of subordinates" class="subordinates-list-item" >
+      <app-tree-node [superior]="subordinate"></app-tree-node>
+    </li>
+  </ul>
+  <span *ngIf="hasSubordinates===false" class="no-subordinates-message"><br>no subordinates for this employee</span>
+</ng-container>

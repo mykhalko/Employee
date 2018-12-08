@@ -1,0 +1,13 @@
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.toolbar-link {
+  color: #000000;
+  text-decoration: none;
+  margin-left: 1em;
+}
+
+.toolbar-link:hover {
+  color: #3f51b5;
+}

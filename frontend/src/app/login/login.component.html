@@ -1,0 +1,17 @@
+<mat-card class="login-card">
+  <mat-card-title>
+    <mat-card-title>Welcome</mat-card-title>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput type="text" placeholder="username" [(ngModel)]="user.username">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="password" placeholder="password" [(ngModel)]="user.password">
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="login()">Log in</button>
+    <mat-progress-spinner *ngIf="loading" [diameter]="15" mode="indeterminate"></mat-progress-spinner>
+  </mat-card-actions>
+</mat-card>

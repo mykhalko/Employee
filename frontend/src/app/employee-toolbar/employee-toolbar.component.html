@@ -1,0 +1,18 @@
+<div class="login-container">
+  <mat-toolbar>
+    <span>Employee</span>
+    <span class="fill-remaining-space"></span>
+    <span *ngIf="authService.currentAuthValue" >
+      <a class="toolbar-link" routerLink="/employee">list</a>
+    </span>
+    <span>
+      <a class="toolbar-link" routerLink="/tree">tree</a>
+    </span>
+    <span *ngIf="!authService.currentAuthValue" >
+      <a class="toolbar-link" routerLink="/login">login</a>
+    </span>
+    <span *ngIf="authService.currentAuthValue">
+      <a class="toolbar-link" [routerLink]="" (click)="authService.logout()" >logout</a>
+    </span>
+  </mat-toolbar>
+</div>
