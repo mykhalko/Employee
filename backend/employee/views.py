@@ -79,8 +79,10 @@ class EmployeeViewSet(ModelViewSet):
             if deletion_type == 'delete_branch':
                 instance.delete_branch()
             elif deletion_type == 'resubmission':
+                print('in resub')
                 new_superior_id = int(query_params.get('subdue_to'))
-                new_superior = self.queryset.get(new_superior_id)
+                new_superior = self.queryset.get(id=new_superior_id)
+                print('new superior got')
                 if new_superior.is_subdued_to(instance):
                     raise ValueError('New superior is subdued to employee for deletion')
                 instance.delete(subdue_to=new_superior)
@@ -88,6 +90,7 @@ class EmployeeViewSet(ModelViewSet):
                 instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except (TypeError, ValueError, self.model.DoesNotExist) as e:
+            print(e)
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={'error': e.args[0]})
