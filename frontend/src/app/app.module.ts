@@ -1,11 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
-import { EmployeeComponent } from './employee/employee.component';
 import { MatToolbarModule, MatFormFieldModule, MatInputModule,
 MatCardModule, MatButtonModule, MatProgressSpinnerModule,
-  MatTreeModule, MatIconModule, } from '@angular/material';
+  MatSelectModule, MatCheckboxModule, MatListModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -18,6 +16,8 @@ import { EmployeeToolbarComponent } from './employee-toolbar/employee-toolbar.co
 import { JwtInterceptor } from './_interceptors';
 import { ErrorInterceptor } from './_interceptors';
 import { TreeNodeComponent } from './tree-node/tree-node.component';
+import { EmployeeComponent } from './employee/employee.component';
+import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 
 
 @NgModule({
@@ -42,8 +42,9 @@ import { TreeNodeComponent } from './tree-node/tree-node.component';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatTreeModule,
-    MatIconModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatListModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

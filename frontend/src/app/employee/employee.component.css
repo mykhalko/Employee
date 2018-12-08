@@ -1,0 +1,52 @@
+.form-container {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.employee-container, .actions-container {
+  display: flex;
+  justify-content: center;
+}
+
+ul {
+  list-style: none;
+}
+
+mat-form-field {
+  margin-left: 20px;
+}
+
+mat-checkbox {
+  margin-left: 20px;
+}
+
+mat-list {
+  width: 80%;
+}
+
+a.list-item-link {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+  color: black;
+}
+
+a.list-item-link:hover {
+  color: #3f51b5;
+}
+
+mat-list-item span {
+  display: block;
+}
+
+mat-list-item span {
+  width: 25%;
+}
+
+mat-list-item {
+  border-bottom: 1px solid lightgray;
+  justify-content: space-between;
+}

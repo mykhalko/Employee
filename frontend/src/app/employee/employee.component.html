@@ -1,3 +1,43 @@
-<p>
-  employee works!
-</p>
+<div class="form-container">
+  <mat-form-field>
+    <mat-select placeholder="search by" (selectionChange)="refresh()" [(ngModel)]="pickedSearchField">
+      <mat-option>None</mat-option>
+      <mat-option *ngFor="let option of searchBy" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input [(ngModel)]="searchValue"  (change)="refresh()" type="text" matInput placeholder="key words">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="order by" (selectionChange)="refresh()" [(ngModel)]="pickedOrder">
+      <mat-option>None</mat-option>
+      <mat-option *ngFor="let option of ordering" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-checkbox (change)="refresh()" [(ngModel)]="reverse" >reverse</mat-checkbox>
+</div>
+<div class="employee-container">
+  <mat-list role="list" *ngIf="employees">
+    <mat-list-item role="listitem">
+      <span>fullname</span>
+      <span>position</span>
+      <span>salary</span>
+      <span>employment date</span>
+    </mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let employee of employees">
+      <a routerLink="/employee/{{employee.id}}" class="list-item-link">
+        <span>{{employee.fullname}}</span>
+        <span>{{employee.position}}</span>
+        <span>${{employee.salary}}</span>
+        <span>{{employee.employment_date}}</span>
+      </a>
+    </mat-list-item>
+  </mat-list>
+</div>
+<div class="actions-container">
+  <button mat-button (click)="loadMore()">load more</button>
+</div>

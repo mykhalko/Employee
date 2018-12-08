@@ -7,7 +7,6 @@ export class Employee {
   superior: Number;
   is_general_chief: Boolean;
   image: string;
-  subordinates: Employee[];
 }
 
 
