@@ -1,3 +1,71 @@
-<p>
-  employee-detail works!
-</p>
+<div class="detail-container">
+  <mat-card *ngIf="employee">
+    <mat-card-header>
+      <div mat-card-avatar class="employee-image"></div>
+      <mat-card-title>{{ employee.fullname }}</mat-card-title>
+      <img src="{{ employee.image }}">
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <span>Fullname: {{ employee.fullname }}</span>
+        <span>Position: {{ employee.position }}</span>
+        <span>Salary: ${{ employee.salary }}</span>
+        <span>Employment date: {{ employee.employment_date }}</span>
+        <span>General chief: {{ employee.is_general_chief ? 'yes' : 'no'}}</span>
+        <span *ngIf="superior">
+        Superior:
+        <a routerLink="/detail/{{superior.id}}" class="superior-link">
+        {{ superior.fullname }}
+        </a>
+      </span>
+      </div>
+      <div *ngIf="editingEnabled" class="editing-container">
+        <mat-form-field>
+          <input matInput [(ngModel)]="bufferData.fullname" placeholder="Fullname">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="bufferData.position" placeholder="position">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="bufferData.salary" placeholder="Salary">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="bufferData.employment_date" placeholder="Employment date">
+        </mat-form-field>
+        <!--<mat-form-field>-->
+        <!--<mat-select [(ngModel)]="bufferData.superior" placeholder="Superior">-->
+        <!--<mat-option *ngFor="availableSuperior of availableSuperiors" value="availableSuperior.id"></mat-option>-->
+        <!--</mat-select>-->
+        <!--</mat-form-field>-->
+        <mat-form-field>
+          <input matInput [(ngModel)]="bufferData.superior" placeholder="Superior by id">
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button *ngIf="!editingEnabled" mat-button (click)="enableEditing()">EDIT</button>
+      <button *ngIf="editingEnabled" mat-button (click)="postChanges()">CONFIRM</button>
+      <button *ngIf="editingEnabled" mat-button (click)="cancelChanges()">CANCEL</button>
+      <button *ngIf="!deletionDialog" mat-button (click)="openDeletionDialog()">DELETE</button>
+      <button mat-button (click)="goBack()">GO BACK</button>
+      <div *ngIf="deletionDialog">
+        <mat-radio-group [(ngModel)]="deletionType" class="deletion-radio-group">
+          <mat-radio-button *ngFor="let option of deletionTypes" [value]="option">
+            {{option}}<br>
+          </mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field *ngIf="deletionType==='resubmission'">
+          <input matInput [(ngModel)]="resubmission_superior_id" placeholder="subdue to">
+        </mat-form-field>
+        <div>
+          <button mat-button (click)="closeDeletionDialog()">CANCEL DELETION</button>
+          <button mat-button (click)="delete()">CONFIRM DELETION</button>
+        </div>
+      </div>
+      <div *ngIf="error" class="error-message">
+        <span>{{error}}</span>
+        <button mat-button (click)="clearError()">clear</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

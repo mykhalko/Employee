@@ -1,0 +1,61 @@
+.detail-container {
+  max-width: 650px;
+  margin: auto;
+}
+
+mat-card {
+  margin: auto;
+  margin-top: 30px;
+  width: 80%;
+}
+
+mat-card-content span {
+  margin-top: 15px;
+  display: block;
+  font-size: 1.2em;
+}
+
+button {
+  font-size: 1em;
+}
+
+a.superior-link {
+  text-decoration: none;
+  color: black;
+}
+
+a.superior-link:hover {
+  color: #3f51b5;
+}
+
+.editing-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.editing-container input {
+  font-size: 1em;
+}
+
+.editing-container > * {
+  width: 100%;
+}
+
+mat-form-field.mat-form-field {
+  font-size: 1.2em;
+}
+
+.deletion-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-radio-button {
+  padding: 10px;
+}
+
+.error-message span {
+  color: #F57C00;
+  font-size: 1.2em;
+}

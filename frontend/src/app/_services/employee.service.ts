@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { Employee, EmployeeList } from '../_models';
-import {query} from "@angular/animations";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +21,10 @@ export class EmployeeService {
     return this.http.get<EmployeeList>(url).pipe(
       map(chiefs => chiefs.results[0])
     );
+  }
+
+  getEmployeeById(id: Number): Observable<Employee> {
+    return this.http.get<Employee>(this.baseUrl + `/${id}`);
   }
 
   getSubordinates (superior_id: Number): Observable<Employee[]> {
@@ -61,6 +64,28 @@ export class EmployeeService {
     return this.http.get<EmployeeList>(this.baseUrl + query).pipe(
         map(data => data.results)
     );
+  }
+
+  edit(id: number, data: any): Observable<any> {
+    return this.http.patch<Employee>(this.baseUrl + `/${id}`, data);
+  }
+
+  create(data: any): Observable<any> {
+    return this.http.post(this.baseUrl, data);
+  }
+
+  branchDelete(id: number): Observable<any> {
+    const args = 'type=branch_delete';
+    return this.http.delete(this.baseUrl + `/${id}?` + args);
+  }
+
+  resubmissionDelete(id: number, subdue_to: number): Observable<any> {
+    const args = `type=resubmission&subdue_to=${subdue_to}`;
+    return this.http.delete(this.baseUrl + `/${id}?` + args);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(this.baseUrl + `/${id}`);
   }
 
   setUpForDebug () {

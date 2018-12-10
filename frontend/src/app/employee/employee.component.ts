@@ -12,7 +12,7 @@ import { Employee } from '../_models';
 export class EmployeeComponent implements OnInit {
 
   employees: Employee[];
-  ordering: string[] = ['fullname', 'position', 'salary', 'employment date'];
+  ordering: string[] = ['fullname', 'position', 'salary', 'employment_date'];
   pickedOrder: string = null;
   reverse: Boolean = false;
   searchBy: string[] = ['fullname', 'position', 'salary', 'employment_date'];
@@ -41,7 +41,10 @@ export class EmployeeComponent implements OnInit {
     const searchField = this.pickedSearchField;
     const searchValue = this.searchValue ? this.searchValue : '';
     let ordering = null;
-    const page = (this.itemsLoaded / 50) + 1;
+    const page = Math.floor(this.itemsLoaded / 50) + 1;
+    if (page < 2 && this.employees.length) {
+      return;
+    }
     if (this.pickedOrder) {
       ordering = this.pickedOrder;
       if (this.reverse) {
@@ -53,5 +56,9 @@ export class EmployeeComponent implements OnInit {
         this.itemsLoaded = this.employees.length;
       }
     );
+  }
+
+  get availableMore() {
+    return !(this.itemsLoaded % 50);
   }
 }

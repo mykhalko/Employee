@@ -18,7 +18,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-checkbox (change)="refresh()" [(ngModel)]="reverse" >reverse</mat-checkbox>
+  <mat-checkbox *ngIf="pickedOrder" (change)="refresh()" [(ngModel)]="reverse" >reverse</mat-checkbox>
 </div>
 <div class="employee-container">
   <mat-list role="list" *ngIf="employees">
@@ -29,7 +29,7 @@
       <span>employment date</span>
     </mat-list-item>
     <mat-list-item role="listitem" *ngFor="let employee of employees">
-      <a routerLink="/employee/{{employee.id}}" class="list-item-link">
+      <a routerLink="/detail/{{employee.id}}" class="list-item-link">
         <span>{{employee.fullname}}</span>
         <span>{{employee.position}}</span>
         <span>${{employee.salary}}</span>
@@ -39,5 +39,5 @@
   </mat-list>
 </div>
 <div class="actions-container">
-  <button mat-button (click)="loadMore()">load more</button>
+  <button *ngIf="availableMore" mat-button (click)="loadMore()">load more</button>
 </div>

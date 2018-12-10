@@ -1,0 +1,40 @@
+.editing-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.editing-container input {
+  font-size: 1em;
+}
+
+.editing-container > * {
+  width: 100%;
+}
+
+.creation-container {
+  max-width: 650px;
+  margin: auto;
+}
+
+mat-card {
+  margin: auto;
+  margin-top: 30px;
+  width: 80%;
+}
+
+mat-card-content span {
+  margin-top: 15px;
+  display: block;
+  font-size: 1.2em;
+}
+
+button {
+  font-size: 1em;
+}
+
+
+.error-message span {
+  color: #F57C00;
+  font-size: 1.2em;
+}

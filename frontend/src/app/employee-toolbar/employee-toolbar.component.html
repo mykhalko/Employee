@@ -3,10 +3,13 @@
     <span>Employee</span>
     <span class="fill-remaining-space"></span>
     <span *ngIf="authService.currentAuthValue" >
-      <a class="toolbar-link" routerLink="/employee">list</a>
+      <a class="toolbar-link" routerLink="/add">add employee</a>
+    </span>
+    <span *ngIf="authService.currentAuthValue" >
+      <a class="toolbar-link" routerLink="/list">list</a>
     </span>
     <span>
-      <a class="toolbar-link" routerLink="/tree">tree</a>
+      <a class="toolbar-link" routerLink="">tree</a>
     </span>
     <span *ngIf="!authService.currentAuthValue" >
       <a class="toolbar-link" routerLink="/login">login</a>
