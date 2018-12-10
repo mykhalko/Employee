@@ -11,10 +11,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         model = self.Meta.model
-        superior_id = validated_data.get('superior')
-        if superior_id:
-            superior = model.objects.get(id=superior_id)
-            validated_data['superior'] = superior
         instance = model(**validated_data)
         instance.save()
         return instance
